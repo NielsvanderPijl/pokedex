@@ -1,6 +1,8 @@
 <?php
 include "db.php";
 include "function.php";
+
+$stmt = $pdo->query("SELECT * FROM pokemon");
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
@@ -12,36 +14,42 @@ include "function.php";
     <link href="css/styles.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="container">
-
     <div class="row">
-        <div class="col">
-
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Donald Trump</h5>
-                    <p class="card-text">De 47ste president van amerika.</p>
+        <?php
+        while ($row = $stmt->fetch()) {
+            //echo "<li>{$row['name']} ({$row['type']})</li>";
+            //}
+            $img_src = strtolower($row['name']);
+            //echo $img_src;
+            // 250 = 100%
+            $hp_width = $row['hp'] / 2.5;
+            ?>
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="img/<?= $img_src ?>.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <?= $row['name'] ?>
+                            <span class="badge text-bg-secondary">
+                            <?= $row['type'] ?>
+                        </span>
+                        </h5>
+                        <p class="card-text">
+                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar text-bg-success" style="width: <?= $hp_width ?>%"><?= $row['hp'] ?></div>
+                        </div>
+                        </p>
+                        <!--                    <a href="#" class="btn btn-primary">Go somewhere</a>-->
+                    </div>
                 </div>
-                <img src="img/donaldtrump.jpg" class="card-img-bottom" alt="...">
             </div>
-
-
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Message</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-
-
-
-        </div>
+        <?php } ?>
     </div>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
+
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 $user = 'root';
 $pass = '';
 $host = 'localhost';
-$db = 'pokedex';
+$db = 'pokedex2';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
