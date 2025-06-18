@@ -3,6 +3,15 @@ include "db.php";
 include "function.php";
 
 $stmt = $pdo->query("SELECT * FROM pokemon");
+if (($_SERVER["REQUEST_METHOD"]) === "POST") {
+    if (!empty($_POST['pokemon'])) {
+        $name = $_POST['pokemon'];
+        $stmt = $pdo->prepare("SELECT * FROM pokemon WHERE name LIKE ?");
+        $stmt->execute(["%$name%"]);
+    }
+} else {
+    $stmt = $pdo->query("SELECT * FROM pokemon");
+}
 ?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
@@ -14,7 +23,20 @@ $stmt = $pdo->query("SELECT * FROM pokemon");
     <link href="css/styles.css" rel="stylesheet">
 </head>
 <body>
+
 <div class="container">
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="text" name="pokemon" placeholder="Zoek op naam">
+            </div>
+            <div class="col">
+                <button type="submit">Zoeken</button>
+            </div>
+        </div>
+    </form>
+
+
     <div class="row">
         <?php
         while ($row = $stmt->fetch()) {
@@ -24,6 +46,10 @@ $stmt = $pdo->query("SELECT * FROM pokemon");
             //echo $img_src;
             // 250 = 100%
             $hp_width = $row['hp'] / 2.5;
+            $attack_width = $row['attack'] / 1.34;
+            $defense_width = $row['defense'] / 1.8;
+            $speed_width = $row['speed'] / 1.4;
+
             ?>
             <div class="col-md-3">
                 <div class="card">
@@ -36,9 +62,54 @@ $stmt = $pdo->query("SELECT * FROM pokemon");
                         </span>
                         </h5>
                         <p class="card-text">
-                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar text-bg-success" style="width: <?= $hp_width ?>%"><?= $row['hp'] ?></div>
-                        </div>
+                        <table>
+                            <tr>
+                                <td class="progress-name">hp</td>
+                                <td>
+                                    <div class="progress" role="progressbar" aria-label="Success example"
+                                         aria-valuenow="25"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar text-bg-success"
+                                             style="width: <?= $hp_width ?>%"><?= $row['hp'] ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Attack</td>
+                                <td>
+                                    <div class="progress" role="progressbar" aria-label="Success example"
+                                         aria-valuenow="25"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar text-bg-danger"
+                                             style="width: <?= $attack_width ?>%"><?= $row['attack'] ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Defense</td>
+                                <td>
+                                    <div class="progress" role="progressbar" aria-label="Success example"
+                                         aria-valuenow="25"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar text-bg-info"
+                                             style="width: <?= $defense_width ?>%"><?= $row['defense'] ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td>
+                                    <div class="progress" role="progressbar" aria-label="Success example"
+                                         aria-valuenow="25"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar text-bg-warning"
+                                             style="width: <?= $speed_width ?>%"><?= $row['speed'] ?></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
                         </p>
                         <!--                    <a href="#" class="btn btn-primary">Go somewhere</a>-->
                     </div>
